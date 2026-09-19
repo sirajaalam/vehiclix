@@ -98,3 +98,11 @@ export function createApp(): Express {
 }
 
 export const app = createApp();
+export default app;
+
+// Ensure CommonJS default export compatibility for Vercel Node runtime
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = app;
+  module.exports.app = app;
+  module.exports.default = app;
+}
