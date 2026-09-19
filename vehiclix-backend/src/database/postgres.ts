@@ -1,9 +1,24 @@
 import { Pool, QueryResult, QueryResultRow } from 'pg';
 import { env } from '../config/env';
 
+function sanitizeDatabaseUrl(raw: string): string {
+  if (!raw) return 'postgresql://postgres:postgres@127.0.0.1:54322/postgres';
+  try {
+    const trimmed = raw.trim();
+    // Check if password has unencoded '@' symbol (e.g. postgresql://user:pass@word@host:5432/db)
+    const match = trimmed.match(/^(postgres(?:ql)?:\/\/)([^:]+):([^@]+@[^@]+)@(.+)$/);
+    if (match && match[1] && match[2] && match[3] && match[4]) {
+      return `${match[1]}${match[2]}:${encodeURIComponent(match[3])}@${match[4]}`;
+    }
+    return trimmed;
+  } catch {
+    return raw;
+  }
+}
+
 export const pgPool = new Pool({
-  connectionString: env.DATABASE_URL,
-  max: 20,
+  connectionString: sanitizeDatabaseUrl(env.DATABASE_URL),
+  max: 10,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
 });

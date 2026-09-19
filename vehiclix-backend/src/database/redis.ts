@@ -1,27 +1,70 @@
 import Redis from 'ioredis';
 import { env } from '../config/env';
 
-export const redis = new Redis(env.REDIS_URL, {
-  lazyConnect: true,
-  maxRetriesPerRequest: 1,
-  enableOfflineQueue: false,
-  connectTimeout: 3000,
-  retryStrategy(times) {
-    if (times > 3) {
-      return null; // Stop retrying after 3 attempts
+function sanitizeRedisUrl(raw: string): string {
+  if (!raw) return 'redis://127.0.0.1:6379';
+  let url = raw.trim();
+
+  // Strip CLI command syntax if copied from Upstash console (e.g. redis-cli --tls -u redis://...)
+  if (url.includes('-u ')) {
+    url = url.split('-u ')[1]?.trim() || url;
+  }
+  if (url.startsWith('redis://redis-cli')) {
+    url = url.replace('redis://redis-cli', '').trim();
+    if (url.includes('-u ')) {
+      url = url.split('-u ')[1]?.trim() || url;
     }
-    return Math.min(times * 500, 2000);
-  },
-});
+  }
+  if (url.startsWith('redis-cli ')) {
+    url = url.replace('redis-cli ', '').trim();
+  }
 
-redis.on('connect', () => {
-  console.log('[Redis] Successfully connected.');
-});
+  // Upstash requires rediss:// (TLS)
+  if (url.includes('upstash.io') && url.startsWith('redis://')) {
+    url = url.replace('redis://', 'rediss://');
+  }
 
-redis.on('error', (err) => {
-  // In dev, Redis may not be immediately running; log cleanly without crashing
-  console.warn('[Redis] Connection warning:', err.message);
-});
+  // Fallback if malformed
+  if (!url.startsWith('redis://') && !url.startsWith('rediss://')) {
+    url = 'redis://127.0.0.1:6379';
+  }
+
+  return url;
+}
+
+function initRedis(): Redis {
+  const url = sanitizeRedisUrl(env.REDIS_URL);
+
+  try {
+    const client = new Redis(url, {
+      lazyConnect: true,
+      maxRetriesPerRequest: 1,
+      enableOfflineQueue: false,
+      connectTimeout: 3000,
+      retryStrategy(times) {
+        if (times > 3) {
+          return null; // Stop retrying after 3 attempts
+        }
+        return Math.min(times * 500, 2000);
+      },
+    });
+
+    client.on('connect', () => {
+      console.log('[Redis] Successfully connected.');
+    });
+
+    client.on('error', (err) => {
+      console.warn('[Redis] Connection warning:', err.message);
+    });
+
+    return client;
+  } catch (err: any) {
+    console.warn('[Redis] Initialization error (falling back to offline client):', err?.message);
+    return new Redis({ lazyConnect: true, enableOfflineQueue: false });
+  }
+}
+
+export const redis = initRedis();
 
 export async function checkRedisHealth(): Promise<{
   status: 'connected' | 'disconnected';
