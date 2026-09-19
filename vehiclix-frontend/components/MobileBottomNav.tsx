@@ -22,9 +22,9 @@ export function MobileBottomNav({ onOpenMenu }: MobileBottomNavProps) {
   return (
     <nav
       aria-label="Mobile navigation"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 w-full border-t border-white/[0.08] bg-slate-950/85 backdrop-blur-xl supports-[backdrop-filter]:bg-slate-950/80 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] transition-colors"
+      className="md:hidden fixed z-40 left-0 right-0 mx-auto w-[calc(100%-32px)] max-w-[356px] bottom-[max(0.75rem,env(safe-area-inset-bottom,0.75rem))] rounded-full border border-white/[0.12] bg-slate-950/85 backdrop-blur-2xl supports-[backdrop-filter]:bg-slate-950/80 px-2 py-1.5 shadow-[0_10px_32px_rgba(0,0,0,0.65),inset_0_1px_0_0_rgba(255,255,255,0.14)]"
     >
-      <div className="grid grid-cols-5 items-center max-w-md mx-auto px-1">
+      <div className="flex items-center justify-between">
         {items.map((item) => {
           const isActive =
             item.href === '/dashboard'
@@ -36,16 +36,20 @@ export function MobileBottomNav({ onOpenMenu }: MobileBottomNavProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center py-1 transition-colors duration-150 ${
+              className={`flex-1 flex flex-col items-center justify-center py-0.5 rounded-full transition-colors duration-150 ${
                 isActive
                   ? 'text-emerald-400 font-semibold'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <div className="relative flex items-center justify-center">
-                <Icon className="h-5 w-5 transition-transform duration-150" strokeWidth={isActive ? 2.2 : 1.75} />
+              <div
+                className={`flex items-center justify-center rounded-full transition-colors ${
+                  isActive ? 'bg-emerald-500/15 text-emerald-400 px-2.5 py-1' : 'p-1'
+                }`}
+              >
+                <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.2 : 1.8} />
               </div>
-              <span className="text-[10px] tracking-tight mt-1 font-medium leading-none">
+              <span className="text-[9.5px] tracking-tight mt-0.5 font-medium leading-none">
                 {item.name}
               </span>
             </Link>
@@ -55,13 +59,13 @@ export function MobileBottomNav({ onOpenMenu }: MobileBottomNavProps) {
         <button
           type="button"
           onClick={onOpenMenu}
-          className="flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-200 transition-colors duration-150"
+          className="flex-1 flex flex-col items-center justify-center py-0.5 rounded-full text-slate-400 hover:text-slate-200 transition-colors duration-150"
           aria-label="Open navigation menu"
         >
-          <div className="relative flex items-center justify-center">
-            <Menu className="h-5 w-5" strokeWidth={1.75} />
+          <div className="flex items-center justify-center rounded-full p-1">
+            <Menu className="h-[18px] w-[18px]" strokeWidth={1.8} />
           </div>
-          <span className="text-[10px] tracking-tight mt-1 font-medium leading-none">
+          <span className="text-[9.5px] tracking-tight mt-0.5 font-medium leading-none">
             More
           </span>
         </button>
