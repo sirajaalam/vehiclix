@@ -251,7 +251,8 @@ export function Navbar({ isAppRoute = false, onOpenSidebar }: NavbarProps) {
                 headerConfig.actions
               ) : (
                 <>
-                  {!pathname.startsWith('/trips/calculator') && (
+                  {/* Trip Calculator is relevant ONLY inside the Trips module */}
+                  {pathname === '/trips' && (
                     <Link
                       href="/trips/calculator"
                       className={`flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.05] text-xs font-medium text-slate-300 hover:bg-white/[0.1] hover:text-white transition-all shadow-sm ${
