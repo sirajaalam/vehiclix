@@ -25,6 +25,7 @@ import { api } from '../../../../lib/api';
 import { DatePicker } from '../../../../components/ui';
 import { Modal } from '../../../../components/ui/Modal';
 import { toast } from 'sonner';
+import { useHeader } from '../../../../context/HeaderContext';
 
 interface Vehicle {
   id: string;
@@ -326,6 +327,40 @@ export default function EditTripPage() {
     }
   };
 
+  const { setHeaderConfig } = useHeader();
+
+  useEffect(() => {
+    setHeaderConfig({
+      title: 'Edit Expedition',
+      section: 'Trips',
+      icon: Compass,
+      backHref: '/trips',
+      backText: 'Back to Expeditions',
+      actions: (
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href={`/trips/${tripId}/split`}
+            className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 text-xs font-semibold transition-colors whitespace-nowrap shrink-0"
+          >
+            <Split className="h-3.5 w-3.5 shrink-0" />
+            <span>Open Splitwise</span>
+          </Link>
+          <button
+            type="submit"
+            form="edit-trip-form"
+            disabled={submitting}
+            className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500 hover:bg-emerald-400 px-3.5 py-1 sm:px-4 sm:py-1.5 text-xs font-bold text-slate-950 transition-all shadow-md shadow-emerald-500/20 active:scale-95 disabled:opacity-50 cursor-pointer whitespace-nowrap shrink-0"
+          >
+            <Save className="h-3.5 w-3.5 shrink-0" />
+            <span>{submitting ? 'Saving...' : 'Save & Split'}</span>
+          </button>
+        </div>
+      ),
+    });
+
+    return () => setHeaderConfig(null);
+  }, [tripId, submitting, setHeaderConfig]);
+
   if (loadingTrip) {
     return (
       <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
@@ -339,47 +374,7 @@ export default function EditTripPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 pb-16">
-      {/* Top Breadcrumb / Action Bar */}
-      <div className="border-b border-white/[0.08] bg-slate-900/80 backdrop-blur-md sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <Link
-              href="/trips"
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] text-slate-300 hover:text-white hover:bg-white/[0.08] transition-colors text-xs font-medium shrink-0 whitespace-nowrap"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Back to Expeditions</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
-            <span className="text-slate-600 hidden sm:inline">/</span>
-            <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5 truncate whitespace-nowrap">
-              <Compass className="h-3.5 w-3.5 shrink-0" />
-              <span>Edit Expedition</span>
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            <Link
-              href={`/trips/${tripId}/split`}
-              className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 text-xs font-semibold transition-colors whitespace-nowrap shrink-0"
-            >
-              <Split className="h-3.5 w-3.5" />
-              <span>Open Splitwise</span>
-            </Link>
-            <button
-              type="submit"
-              form="edit-trip-form"
-              disabled={submitting}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-slate-950 transition-all shadow-lg shadow-emerald-500/20 active:scale-95 disabled:opacity-50 cursor-pointer whitespace-nowrap shrink-0"
-            >
-              <Save className="h-3.5 w-3.5" />
-              <span>{submitting ? 'Saving...' : 'Save & Split'}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         {/* Page Title */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">

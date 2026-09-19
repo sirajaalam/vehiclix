@@ -25,6 +25,7 @@ import { api } from '../../../lib/api';
 import { DatePicker } from '../../../components/ui';
 import { Modal } from '../../../components/ui/Modal';
 import { toast } from 'sonner';
+import { useHeader } from '../../../context/HeaderContext';
 
 interface Vehicle {
   id: string;
@@ -252,56 +253,50 @@ export default function NewTripPage() {
     }
   };
 
+  const { setHeaderConfig } = useHeader();
+
+  // Register dynamic module header config with primary action
+  useEffect(() => {
+    setHeaderConfig({
+      title: 'Plan Expedition',
+      section: 'Trips',
+      icon: Compass,
+      backHref: '/trips',
+      backText: 'Back to Expeditions',
+      actions: (
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href="/trips"
+            className="hidden sm:inline-block px-3 py-1.5 text-xs text-slate-400 hover:text-white transition-colors whitespace-nowrap"
+          >
+            Cancel
+          </Link>
+          <button
+            type="submit"
+            form="new-trip-form"
+            disabled={submitting}
+            className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500 hover:bg-emerald-400 px-3.5 py-1 sm:px-4 sm:py-1.5 text-xs font-bold text-slate-950 transition-all shadow-md shadow-emerald-500/20 active:scale-95 disabled:opacity-50 whitespace-nowrap shrink-0 cursor-pointer"
+          >
+            <Save className="h-3.5 w-3.5 shrink-0" />
+            <span>{submitting ? 'Creating...' : 'Save & Split'}</span>
+          </button>
+        </div>
+      ),
+    });
+
+    return () => setHeaderConfig(null);
+  }, [submitting, setHeaderConfig]);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 pb-16">
-      {/* Top Breadcrumb / Navigation Bar */}
-      <div className="border-b border-white/[0.08] bg-slate-900/80 backdrop-blur-md sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <Link
-              href="/trips"
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] text-slate-300 hover:text-white hover:bg-white/[0.08] transition-colors text-xs font-medium shrink-0 whitespace-nowrap"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Back to Expeditions</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
-            <span className="text-slate-600 hidden sm:inline">/</span>
-            <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5 truncate whitespace-nowrap">
-              <Compass className="h-3.5 w-3.5 shrink-0" />
-              <span>Plan Expedition</span>
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            <button
-              type="button"
-              onClick={() => router.push('/trips')}
-              className="hidden sm:inline-block px-3.5 py-1.5 text-xs text-slate-400 hover:text-white transition-colors whitespace-nowrap"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              form="new-trip-form"
-              disabled={submitting}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-slate-950 transition-all shadow-lg shadow-emerald-500/20 active:scale-95 disabled:opacity-50 whitespace-nowrap shrink-0 cursor-pointer"
-            >
-              <Save className="h-4 w-4" />
-              <span>{submitting ? 'Creating...' : 'Save & Split'}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         {/* Page Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-              <Compass className="h-5 w-5" />
+        <div className="mb-6 sm:mb-8">
+          <div className="flex items-start gap-3 mb-2">
+            <div className="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
+              <Compass className="h-5 w-5 shrink-0" />
             </div>
-            <div>
+            <div className="min-w-0">
               <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight font-display">
                 Plan Road Expedition
               </h1>
@@ -338,7 +333,7 @@ export default function NewTripPage() {
             <div className="lg:col-span-7 space-y-6">
               <div className="rounded-2xl border border-white/[0.08] bg-slate-900/60 p-5 sm:p-6 backdrop-blur-xl space-y-5">
                 <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-white/[0.06]">
-                  <Car className="h-4 w-4 text-emerald-400" />
+                  <Car className="h-4 w-4 text-emerald-400 shrink-0" />
                   <span>Expedition Logistics & Vehicle</span>
                 </div>
 
@@ -633,7 +628,7 @@ export default function NewTripPage() {
               <div className="rounded-2xl border border-white/[0.08] bg-slate-900/60 p-5 backdrop-blur-xl space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
                   <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-emerald-400" />
+                    <DollarSign className="h-4 w-4 text-emerald-400 shrink-0" />
                     <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
                       Itemized Expenses
                     </span>
@@ -647,7 +642,7 @@ export default function NewTripPage() {
                       onClick={handleAddExpenseRow}
                       className="inline-flex items-center gap-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 px-2.5 py-1 text-xs font-semibold transition-colors cursor-pointer"
                     >
-                      <Plus className="h-3.5 w-3.5" />
+                      <Plus className="h-3.5 w-3.5 shrink-0" />
                       <span>Add</span>
                     </button>
                   </div>

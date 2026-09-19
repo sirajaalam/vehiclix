@@ -7,6 +7,7 @@ import { Sidebar } from './Sidebar';
 import { Navbar } from './Navbar';
 import { MobileBottomNav } from './MobileBottomNav';
 import { Footer } from './Footer';
+import { HeaderProvider } from '../context/HeaderContext';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -58,35 +59,37 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
-      {/* Top Navigation Bar */}
-      <Navbar
-        isAppRoute={isAppRoute}
-        onOpenSidebar={() => setMobileSidebarOpen(true)}
-      />
+    <HeaderProvider>
+      <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+        {/* Top Navigation Bar */}
+        <Navbar
+          isAppRoute={isAppRoute}
+          onOpenSidebar={() => setMobileSidebarOpen(true)}
+        />
 
-      {isAppRoute ? (
-        <div className="flex flex-1 relative">
-          {/* Left Sidebar (Desktop Fixed + Mobile Slide Drawer) */}
-          <Sidebar
-            mobileOpen={mobileSidebarOpen}
-            setMobileOpen={setMobileSidebarOpen}
-          />
+        {isAppRoute ? (
+          <div className="flex flex-1 relative">
+            {/* Left Sidebar (Desktop Fixed + Mobile Slide Drawer) */}
+            <Sidebar
+              mobileOpen={mobileSidebarOpen}
+              setMobileOpen={setMobileSidebarOpen}
+            />
 
-          {/* Main App Content Area shifted by md:pl-64 on desktop */}
-          <div className="flex-1 md:pl-64 flex flex-col min-w-0">
-            <main className="flex-1 pb-28 md:pb-12">{children}</main>
+            {/* Main App Content Area shifted by md:pl-64 on desktop */}
+            <div className="flex-1 md:pl-64 flex flex-col min-w-0">
+              <main className="flex-1 pb-28 md:pb-12">{children}</main>
+            </div>
+
+            {/* Mobile Bottom Navigation Bar (Hidden on desktop) */}
+            <MobileBottomNav onOpenMenu={() => setMobileSidebarOpen(true)} />
           </div>
-
-          {/* Mobile Bottom Navigation Bar (Hidden on desktop) */}
-          <MobileBottomNav onOpenMenu={() => setMobileSidebarOpen(true)} />
-        </div>
-      ) : (
-        <>
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </>
-      )}
-    </div>
+        ) : (
+          <>
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </>
+        )}
+      </div>
+    </HeaderProvider>
   );
 }

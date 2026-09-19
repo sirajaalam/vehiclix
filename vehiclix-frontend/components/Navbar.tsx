@@ -15,7 +15,16 @@ import {
   X,
   ChevronRight,
   ArrowRight,
+  ArrowLeft,
+  Compass,
+  Car,
+  Fuel,
+  Wrench,
+  User,
+  Shield,
+  DollarSign,
 } from 'lucide-react';
+import { useHeader } from '../context/HeaderContext';
 
 interface NavbarProps {
   isAppRoute?: boolean;
@@ -25,6 +34,7 @@ interface NavbarProps {
 export function Navbar({ isAppRoute = false, onOpenSidebar }: NavbarProps) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const { headerConfig } = useHeader();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
 
@@ -59,18 +69,106 @@ export function Navbar({ isAppRoute = false, onOpenSidebar }: NavbarProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Get current section name for breadcrumb in app mode
-  const getSectionTitle = () => {
-    if (pathname.startsWith('/dashboard')) return 'Dashboard';
-    if (pathname.startsWith('/garage')) return 'Garage Management';
-    if (pathname.startsWith('/fuel')) return 'Fuel & EV Energy';
-    if (pathname.startsWith('/services')) return 'Maintenance & Reminders';
-    if (pathname.startsWith('/trips/calculator')) return 'Trip Calculator';
-    if (pathname.startsWith('/trips')) return 'Trips & Equal Split';
-    if (pathname.startsWith('/profile')) return 'Account Profile';
-    if (pathname.startsWith('/admin')) return 'Admin Operations';
-    return 'Vehiclix';
+  // Automatic module details resolution based on route
+  const getModuleInfo = () => {
+    if (pathname.startsWith('/trips/calculator')) {
+      return {
+        title: 'Trip Calculator',
+        section: 'Trips',
+        icon: Calculator,
+        backHref: '/trips',
+        backText: 'Back to Trips',
+      };
+    }
+    if (pathname.startsWith('/trips/new')) {
+      return {
+        title: 'Plan Expedition',
+        section: 'Trips',
+        icon: Compass,
+        backHref: '/trips',
+        backText: 'Back to Expeditions',
+      };
+    }
+    if (pathname.match(/^\/trips\/[^/]+\/edit/)) {
+      return {
+        title: 'Edit Expedition',
+        section: 'Trips',
+        icon: Compass,
+        backHref: '/trips',
+        backText: 'Back to Expeditions',
+      };
+    }
+    if (pathname.match(/^\/trips\/[^/]+\/split/)) {
+      return {
+        title: 'Trip Expense Split',
+        section: 'Trips',
+        icon: DollarSign,
+        backHref: '/trips',
+        backText: 'Back to Trips',
+      };
+    }
+    if (pathname.startsWith('/trips')) {
+      return {
+        title: 'Trips & Equal Split',
+        section: 'Vehiclix',
+        icon: Compass,
+      };
+    }
+    if (pathname.startsWith('/garage')) {
+      return {
+        title: 'Garage Management',
+        section: 'Vehiclix',
+        icon: Car,
+      };
+    }
+    if (pathname.startsWith('/fuel')) {
+      return {
+        title: 'Fuel & EV Energy',
+        section: 'Vehiclix',
+        icon: Fuel,
+      };
+    }
+    if (pathname.startsWith('/services') || pathname.startsWith('/maintenance')) {
+      return {
+        title: 'Maintenance & Reminders',
+        section: 'Vehiclix',
+        icon: Wrench,
+      };
+    }
+    if (pathname.startsWith('/profile')) {
+      return {
+        title: 'Account Profile',
+        section: 'Vehiclix',
+        icon: User,
+      };
+    }
+    if (pathname.startsWith('/admin')) {
+      return {
+        title: 'Admin Operations',
+        section: 'Vehiclix',
+        icon: Shield,
+      };
+    }
+    if (pathname.startsWith('/dashboard')) {
+      return {
+        title: 'Fleet Dashboard',
+        section: 'Vehiclix',
+        icon: LayoutDashboard,
+      };
+    }
+    return {
+      title: 'Vehiclix',
+      section: 'Vehiclix',
+      icon: Gauge,
+    };
   };
+
+  const moduleInfo = getModuleInfo();
+  const currentTitle = headerConfig?.title || moduleInfo.title;
+  const currentSection = headerConfig?.section || moduleInfo.section;
+  const CurrentIcon = headerConfig?.icon || moduleInfo.icon;
+  const backHref = headerConfig?.backHref !== undefined ? headerConfig.backHref : moduleInfo.backHref;
+  const backText = headerConfig?.backText || moduleInfo.backText;
 
   // If in App Route (Dashboard, Garage, Fuel, Trips, etc.)
   if (isAppRoute) {
@@ -83,8 +181,8 @@ export function Navbar({ isAppRoute = false, onOpenSidebar }: NavbarProps) {
         <header
           className={`mx-auto transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-auto ${
             isCompact
-              ? 'max-w-[360px] sm:max-w-[420px] md:max-w-none rounded-full border border-white/[0.16] bg-slate-950/75 backdrop-blur-3xl shadow-[0_12px_36px_rgba(0,0,0,0.65),inset_0_1px_0_0_rgba(255,255,255,0.22)] md:rounded-none md:border-b md:border-t-0 md:border-x-0 md:border-white/[0.08] md:bg-slate-950/80 md:shadow-none'
-              : 'max-w-[480px] sm:max-w-[560px] md:max-w-none rounded-full md:rounded-none border border-white/[0.13] md:border-b md:border-t-0 md:border-x-0 md:border-white/[0.08] bg-slate-950/80 md:bg-slate-950/80 backdrop-blur-3xl shadow-[0_8px_30px_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.18)] md:shadow-none'
+              ? 'max-w-[360px] sm:max-w-[440px] md:max-w-none rounded-full border border-white/[0.16] bg-slate-950/75 backdrop-blur-3xl shadow-[0_12px_36px_rgba(0,0,0,0.65),inset_0_1px_0_0_rgba(255,255,255,0.22)] md:rounded-none md:border-b md:border-t-0 md:border-x-0 md:border-white/[0.08] md:bg-slate-950/80 md:shadow-none'
+              : 'max-w-[500px] sm:max-w-[580px] md:max-w-none rounded-full md:rounded-none border border-white/[0.13] md:border-b md:border-t-0 md:border-x-0 md:border-white/[0.08] bg-slate-950/80 md:bg-slate-950/80 backdrop-blur-3xl shadow-[0_8px_30px_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.18)] md:shadow-none'
           }`}
         >
           <div
@@ -94,67 +192,87 @@ export function Navbar({ isAppRoute = false, onOpenSidebar }: NavbarProps) {
                 : 'h-14 sm:h-15 md:h-16 px-3.5 sm:px-5 md:px-8'
             }`}
           >
-            {/* Left: Mobile hamburger menu & section breadcrumb */}
-            <div className="flex items-center gap-2 sm:gap-2.5">
-              <button
-                onClick={onOpenSidebar}
-                className={`md:hidden flex items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.1] text-slate-200 transition-all active:scale-95 cursor-pointer shadow-sm ${
-                  isCompact ? 'h-7.5 w-7.5' : 'h-8.5 w-8.5'
-                }`}
-                aria-label="Open sidebar navigation"
-              >
-                <Menu className={isCompact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
-              </button>
-
-              <div className="flex items-center gap-2">
+            {/* Left: Dynamic Navigation & Context Breadcrumb */}
+            <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+              {backHref ? (
                 <Link
-                  href="/dashboard"
-                  className={`md:hidden flex items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shrink-0 hover:scale-105 transition-all shadow-[0_0_12px_rgba(16,185,129,0.25)] ${
+                  href={backHref}
+                  className={`flex items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.1] text-slate-200 transition-all active:scale-95 cursor-pointer shadow-sm shrink-0 ${
+                    isCompact ? 'h-7.5 w-7.5' : 'h-8.5 w-8.5'
+                  }`}
+                  title={backText || 'Back'}
+                  aria-label={backText || 'Back'}
+                >
+                  <ArrowLeft className={isCompact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
+                </Link>
+              ) : (
+                <button
+                  onClick={onOpenSidebar}
+                  className={`md:hidden flex items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.1] text-slate-200 transition-all active:scale-95 cursor-pointer shadow-sm shrink-0 ${
+                    isCompact ? 'h-7.5 w-7.5' : 'h-8.5 w-8.5'
+                  }`}
+                  aria-label="Open sidebar navigation"
+                >
+                  <Menu className={isCompact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
+                </button>
+              )}
+
+              <div className="flex items-center gap-2 min-w-0">
+                {/* Dynamic module/page icon badge */}
+                <div
+                  className={`flex items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shrink-0 shadow-[0_0_12px_rgba(16,185,129,0.25)] ${
                     isCompact ? 'h-7 w-7' : 'h-8 w-8'
                   }`}
-                  title="Vehiclix Home"
                 >
-                  <Gauge className={isCompact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />
-                </Link>
+                  <CurrentIcon className={isCompact ? 'h-3 w-3 shrink-0' : 'h-3.5 w-3.5 shrink-0'} />
+                </div>
 
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-1.5">
-                    <span className="hidden sm:inline-block text-[11px] font-medium text-slate-400 tracking-wider uppercase">
-                      Vehiclix
+                <div className="flex flex-col min-w-0">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="hidden sm:inline-block text-[11px] font-medium text-slate-400 tracking-wider uppercase shrink-0">
+                      {currentSection}
                     </span>
-                    <ChevronRight className="hidden sm:inline-block h-2.5 w-2.5 text-slate-600" />
+                    <ChevronRight className="hidden sm:inline-block h-2.5 w-2.5 text-slate-600 shrink-0" />
                     <h1
-                      className={`font-semibold text-white tracking-tight transition-all ${
+                      className={`font-semibold text-white tracking-tight transition-all truncate ${
                         isCompact ? 'text-xs sm:text-sm' : 'text-sm sm:text-base'
                       }`}
                     >
-                      {getSectionTitle()}
+                      {currentTitle}
                     </h1>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Right: Actions (Clean Apple buttons; no redundant user pill) */}
-            <div className="flex items-center gap-2 sm:gap-2.5">
-              <Link
-                href="/trips/calculator"
-                className={`flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.05] text-xs font-medium text-slate-300 hover:bg-white/[0.1] hover:text-white transition-all shadow-sm ${
-                  isCompact ? 'px-2 py-1' : 'px-2.5 sm:px-3 py-1.5'
-                }`}
-                title="Trip Calculator"
-              >
-                <Calculator className={isCompact ? 'h-3 w-3 text-emerald-400' : 'h-3.5 w-3.5 text-emerald-400'} />
-                <span className={isCompact ? 'hidden' : 'hidden sm:inline'}>Calculator</span>
-              </Link>
+            {/* Right: Dynamic actions (e.g. Save & Split) or module defaults */}
+            <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+              {headerConfig?.actions ? (
+                headerConfig.actions
+              ) : (
+                <>
+                  {!pathname.startsWith('/trips/calculator') && (
+                    <Link
+                      href="/trips/calculator"
+                      className={`flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.05] text-xs font-medium text-slate-300 hover:bg-white/[0.1] hover:text-white transition-all shadow-sm ${
+                        isCompact ? 'px-2 py-1' : 'px-2.5 sm:px-3 py-1.5'
+                      }`}
+                      title="Trip Calculator"
+                    >
+                      <Calculator className={isCompact ? 'h-3 w-3 text-emerald-400 shrink-0' : 'h-3.5 w-3.5 text-emerald-400 shrink-0'} />
+                      <span className={isCompact ? 'hidden' : 'hidden sm:inline'}>Calculator</span>
+                    </Link>
+                  )}
 
-              <Link
-                href="/help"
-                className="hidden lg:flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors"
-              >
-                <HelpCircle className="h-3.5 w-3.5" />
-                <span>Help</span>
-              </Link>
+                  <Link
+                    href="/help"
+                    className="hidden lg:flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors"
+                  >
+                    <HelpCircle className="h-3.5 w-3.5 shrink-0" />
+                    <span>Help</span>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </header>

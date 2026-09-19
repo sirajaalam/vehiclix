@@ -29,7 +29,12 @@ export function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
-  const mainNavItems = [
+  const mainNavItems: {
+    name: string;
+    href: string;
+    icon: any;
+    badge?: string | null;
+  }[] = [
     {
       name: 'Dashboard',
       href: '/dashboard',
@@ -40,7 +45,7 @@ export function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
       name: 'Garage',
       href: '/garage',
       icon: Car,
-      badge: 'Garage',
+      // badge: 'Garage',
     },
     {
       name: 'Fuel & Energy',
@@ -58,7 +63,7 @@ export function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
       name: 'Trips & Split',
       href: '/trips',
       icon: Compass,
-      badge: 'Equal Split',
+      // badge: 'Equal Split',
     },
   ];
 

@@ -65,7 +65,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
             title="Open calendar picker"
             aria-label="Open calendar picker"
           >
-            <Calendar className="h-4 w-4" />
+            <Calendar className="h-4 w-4 shrink-0" />
           </button>
 
           <input
