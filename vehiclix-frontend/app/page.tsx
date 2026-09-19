@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -32,23 +33,43 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="mx-auto max-w-7xl px-4 pt-28 pb-16 sm:pt-36 sm:pb-20 sm:px-6 lg:px-8 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-semibold text-emerald-400 mb-6">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-semibold text-emerald-400 mb-6"
+        >
           <Zap className="h-3.5 w-3.5" />
           Production-Ready Vehicle Management
-        </div>
+        </motion.div>
 
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-tight">
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-tight"
+        >
           Master Your Vehicles, Fuel & Road Trips with{' '}
           <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
             Precision Intelligence
           </span>
-        </h1>
+        </motion.h1>
 
-        <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed"
+        >
           Vehiclix delivers end-to-end garage tracking, exact paise fuel expenditure, maintenance history, and comprehensive trip expense tracking.
-        </p>
+        </motion.p>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-10 flex flex-wrap items-center justify-center gap-4"
+        >
           {user ? (
             <>
               <Link
@@ -80,10 +101,15 @@ export default function HomePage() {
               </Link>
             </>
           )}
-        </div>
+        </motion.div>
 
         {/* Floating Quick Metric Badges (Apple Minimalist Row) */}
-        <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-4 max-w-3xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-4 max-w-3xl mx-auto"
+        >
           <div className="rounded-[14px] border border-white/[0.08] bg-slate-900/50 p-4 text-center backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             <div className="text-2xl font-bold text-emerald-400">100%</div>
             <div className="text-xs text-slate-400 mt-1">Audit Trail Integrity</div>
@@ -100,7 +126,7 @@ export default function HomePage() {
             <div className="text-2xl font-bold text-indigo-400">PDF</div>
             <div className="text-xs text-slate-400 mt-1">On-Demand Reports</div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Feature Grid (Apple Large Cards 16px, Concentric Inner Icon 10px) */}
