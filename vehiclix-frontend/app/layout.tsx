@@ -36,9 +36,16 @@ export default function RootLayout({
         <AuthProvider>
           <AppShell>{children}</AppShell>
         </AuthProvider>
-        <Toaster richColors position="top-right" theme="dark" closeButton />
+        <Toaster
+          richColors
+          position="top-right"
+          theme="dark"
+          closeButton
+          toastOptions={{
+            className: '!border !border-white/[0.1] !bg-slate-900/95 !backdrop-blur-xl !shadow-lg',
+          }}
+        />
       </body>
     </html>
   );
 }
-
