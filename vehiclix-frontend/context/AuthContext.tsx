@@ -142,6 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: cleanEmail,
         password,
         options: {
+          emailRedirectTo: typeof window !== "undefined" ? `${window.location.origin}/dashboard` : undefined,
           data: {
             role: cleanEmail.includes('admin') ? 'admin' : 'user',
           },
