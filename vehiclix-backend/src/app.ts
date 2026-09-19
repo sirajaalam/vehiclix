@@ -76,6 +76,16 @@ export function createApp(): Express {
   v1Router.use('/services', servicesRoutes);
   v1Router.use('/trips', tripsRoutes);
 
+  // Root status check
+  app.get('/', (_req, res) => {
+    res.json({
+      status: 'ok',
+      name: 'VehiClix API',
+      health: '/api/v1/health',
+      docs: '/api/docs',
+    });
+  });
+
   app.use('/api/v1', v1Router);
 
   // 7. 404 Handler for unmatched routes
