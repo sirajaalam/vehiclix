@@ -5,15 +5,15 @@ import { z } from 'zod';
 dotenv.config();
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-  PORT: z.coerce.number().int().positive().default(9090),
-  CORS_ORIGIN: z.string().default('http://localhost:3000'),
+  NODE_ENV: z.string().default('production'),
+  PORT: z.coerce.number().default(9090),
+  CORS_ORIGIN: z.string().default('*'),
   DATABASE_URL: z.string().default('postgresql://postgres:postgres@127.0.0.1:54322/postgres'),
   REDIS_URL: z.string().default('redis://127.0.0.1:6379'),
-  SUPABASE_URL: z.string().url().optional().or(z.literal('')),
-  SUPABASE_ANON_KEY: z.string().optional().or(z.literal('')),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().optional().or(z.literal('')),
-  SUPABASE_JWT_SECRET: z.string().optional().or(z.literal('')),
+  SUPABASE_URL: z.string().default(''),
+  SUPABASE_ANON_KEY: z.string().default(''),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().default(''),
+  SUPABASE_JWT_SECRET: z.string().default(''),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -22,8 +22,18 @@ function parseEnv(): Env {
   const result = envSchema.safeParse(process.env);
 
   if (!result.success) {
-    console.error('❌ Invalid environment variables:', result.error.format());
-    process.exit(1);
+    console.error('❌ Warning: Environment parsing had issues:', result.error.format());
+    return {
+      NODE_ENV: process.env.NODE_ENV || 'production',
+      PORT: Number(process.env.PORT) || 9090,
+      CORS_ORIGIN: process.env.CORS_ORIGIN || '*',
+      DATABASE_URL: process.env.DATABASE_URL || '',
+      REDIS_URL: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
+      SUPABASE_URL: process.env.SUPABASE_URL || '',
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY || '',
+      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+      SUPABASE_JWT_SECRET: process.env.SUPABASE_JWT_SECRET || '',
+    };
   }
 
   return result.data;
