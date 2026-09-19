@@ -532,22 +532,23 @@ export default function GaragePage() {
             onClick={toggleExpandAll}
             className={`inline-flex items-center gap-2 rounded-xl border h-10 px-3 sm:px-3.5 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap flex-shrink-0 shadow-sm active:scale-95 ${
               !isAllExpanded
-                ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 shadow-[0_0_14px_rgba(16,185,129,0.12)]'
-                : 'border-white/[0.08] bg-slate-900/60 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-white/[0.15]'
+                ? 'border-white/[0.08] bg-slate-900/60 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-white/[0.15]'
+                : 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 shadow-[0_0_14px_rgba(16,185,129,0.12)]'
             }`}
-            title={!isAllExpanded ? 'Expand all vehicle cards to full specs' : 'Collapse all cards into compact summary cards'}
+            title={
+              !isAllExpanded
+                ? 'Expand all vehicle cards to full specs'
+                : 'Collapse all cards into compact summary cards'
+            }
           >
             {!isAllExpanded ? (
               <>
-                <ChevronsUpDown className="h-4 w-4 text-emerald-400" />
+                <ChevronsUpDown className="h-4 w-4 text-slate-400" />
                 <span>Expand All</span>
-                <span className="hidden sm:inline rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[10px] text-emerald-300 font-mono">
-                  Compact
-                </span>
               </>
             ) : (
               <>
-                <ChevronsDownUp className="h-4 w-4 text-slate-400" />
+                <ChevronsDownUp className="h-4 w-4 text-emerald-400" />
                 <span>Collapse All</span>
               </>
             )}
