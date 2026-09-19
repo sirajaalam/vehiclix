@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --background: #030712;
+  --foreground: #f9fafb;
+
+  /* Accent & Brand Colors (Emerald matching project theme) */
+  --accent: #10b981;
+  --accent-hover: #059669;
+  --accent-light: rgba(16, 185, 129, 0.12);
+  --accent-border: rgba(16, 185, 129, 0.28);
+
+  /* Typography variables matching project */
+  --font-display: var(--font-display, -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif);
+  --font-body: var(--font-body, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif);
+
+  /* Apple-inspired consistent radius scale */
+  --radius-xs: 6px;       /* very small controls, badges, micro tags */
+  --radius-sm: 8px;       /* compact controls, small buttons, concentric inner elements */
+  --radius-md: 10px;      /* inputs, standard buttons, segmented controls */
+  --radius-lg: 14px;      /* standard cards, list groups */
+  --radius-xl: 18px;      /* large cards, modal dialogs */
+  --radius-2xl: 22px;     /* prominent sheets, parent hero containers */
+  --radius-pill: 9999px;  /* pills, capsules, circular controls */
+
+  /* Apple-inspired restrained shadows */
+  --apple-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
+  --apple-shadow-md: 0 2px 6px -1px rgba(0, 0, 0, 0.4), 0 1px 3px -1px rgba(0, 0, 0, 0.3);
+  --apple-shadow-lg: 0 8px 24px -4px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+/* Apple continuous corners & subtle surface treatment */
+.apple-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 24, 39, 0.55);
+  box-shadow: var(--apple-shadow-md);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.apple-sheet {
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 24, 39, 0.45);
+  box-shadow: var(--apple-shadow-lg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.apple-dialog {
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(17, 24, 39, 0.85);
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.apple-input {
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(3, 7, 18, 0.6);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.apple-input:focus {
+  outline: none;
+  border-color: rgba(16, 185, 129, 0.8);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.apple-btn {
+  border-radius: var(--radius-md);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.apple-btn:active {
+  transform: scale(0.98);
+}
+
+/* Calendar and Time picker styling */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.85);
+  opacity: 0.85;
+  transition: opacity 0.15s ease, filter 0.15s ease;
+  padding: 2px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  filter: invert(1) drop-shadow(0 0 4px rgba(16, 185, 129, 0.6));
+}
+
