@@ -109,11 +109,11 @@ export default function GaragePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'ALL' | 'CAR' | 'BIKE' | 'TRUCK' | 'ELECTRIC' | 'CNG' | 'PRIMARY'>('ALL');
 
-  // Collapsed Vehicle Cards State (Set of vehicle IDs)
-  const [collapsedIds, setCollapsedIds] = useState<Set<string>>(new Set());
+  // Expanded Vehicle Cards State (Set of vehicle IDs) - default empty so all cards are COLLAPSED by default
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
-  const toggleCollapse = (id: string) => {
-    setCollapsedIds((prev) => {
+  const toggleExpand = (id: string) => {
+    setExpandedIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
         next.delete(id);
@@ -124,13 +124,13 @@ export default function GaragePage() {
     });
   };
 
-  const isAllCollapsed = vehicles.length > 0 && vehicles.every((v) => collapsedIds.has(v.id));
+  const isAllExpanded = vehicles.length > 0 && vehicles.every((v) => expandedIds.has(v.id));
 
-  const toggleCollapseAll = () => {
-    if (isAllCollapsed) {
-      setCollapsedIds(new Set());
+  const toggleExpandAll = () => {
+    if (isAllExpanded) {
+      setExpandedIds(new Set());
     } else {
-      setCollapsedIds(new Set(vehicles.map((v) => v.id)));
+      setExpandedIds(new Set(vehicles.map((v) => v.id)));
     }
   };
 
@@ -529,15 +529,15 @@ export default function GaragePage() {
 
           {/* Global Collapse All / Expand All Toggle - Matching h-10 height, rounded-xl */}
           <button
-            onClick={toggleCollapseAll}
+            onClick={toggleExpandAll}
             className={`inline-flex items-center gap-2 rounded-xl border h-10 px-3 sm:px-3.5 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap flex-shrink-0 shadow-sm active:scale-95 ${
-              isAllCollapsed
+              !isAllExpanded
                 ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 shadow-[0_0_14px_rgba(16,185,129,0.12)]'
                 : 'border-white/[0.08] bg-slate-900/60 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-white/[0.15]'
             }`}
-            title={isAllCollapsed ? 'Expand all vehicle cards to full specs' : 'Collapse all cards into compact summary cards'}
+            title={!isAllExpanded ? 'Expand all vehicle cards to full specs' : 'Collapse all cards into compact summary cards'}
           >
-            {isAllCollapsed ? (
+            {!isAllExpanded ? (
               <>
                 <ChevronsUpDown className="h-4 w-4 text-emerald-400" />
                 <span>Expand All</span>
@@ -593,7 +593,7 @@ export default function GaragePage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {paginatedVehicles.map((v) => {
-            const isCollapsed = collapsedIds.has(v.id);
+            const isCollapsed = !expandedIds.has(v.id);
 
             return (
               <div
@@ -655,7 +655,7 @@ export default function GaragePage() {
                       )}
                       {/* Card Collapse / Expand Chevron Button */}
                       <button
-                        onClick={() => toggleCollapse(v.id)}
+                        onClick={() => toggleExpand(v.id)}
                         className="p-1.5 rounded-[8px] text-slate-400 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer"
                         title={isCollapsed ? 'Expand card specs' : 'Collapse card into compact summary'}
                       >
